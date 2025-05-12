@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        #content {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            background-color: white;
+            padding: 3rem 4rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .js-warning {
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <noscript>
+        <div class="js-warning">
+            <strong>Thông báo!</strong> Trình duyệt của bạn đã tắt JavaScript. 
+            Vui lòng bật JavaScript trong cài đặt trình duyệt để sử dụng đầy đủ chức năng của trang web.
+        </div>
+    </noscript>
+    
+    <div class="container">
+        <div id="content">Hello world!!!</div>
+        <button onclick="changeData()">Change data</button>
+        <input type="text" id="name" placeholder="Enter your name">
+    </div>
+    <!-- Sử dụng JS để thay đổi nội dung  Hello world!!! => Hello-->
+
+    <script>
+        function changeData() {
+            const name = document.getElementById('name').value;
+            document.getElementById('content').innerText = name;
+        }
+
+        if(0.00001){
+            console.log("if");
+        } else {
+            console.log("else");
+        }
+
+        for(let i = 0; i < 10; i++){
+            console.log(i);
+        }
+    </script>
+</body>
+</html>
