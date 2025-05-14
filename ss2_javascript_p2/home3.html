@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes slideInFromRight {
+        from { opacity: 0; transform: translateX(50px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+      
+      @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+      }
+      
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      
+      @keyframes gradientBg {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --delete-color: #e63946;
+        --delete-hover: #d62828;
+        --bg-color: #f8f9fa;
+        --card-bg: #ffffff;
+        --text-color: #212529;
+        --border-color: #e9ecef;
+        --input-bg: #f1f3f5;
+        --completed-color: #4cc9f0;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        min-height: 100vh;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradientBg 15s ease infinite;
+      }
+      
+      .container {
+        background-color: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 650px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: fadeIn 0.8s ease-out forwards;
+        overflow: hidden;
+      }
+      
+      .container:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      }
+      
+      .app-title {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 1.8rem;
+        font-size: 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        position: relative;
+        animation: pulse 2s infinite;
+      }
+      
+      .app-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        width: 50px;
+        height: 3px;
+        background: var(--primary-color);
+        transform: translateX(-50%);
+        border-radius: 2px;
+        transition: width 0.3s;
+      }
+      
+      .container:hover .app-title::after {
+        width: 100px;
+      }
+      
+      .task-input {
+        display: flex;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+        animation: slideInFromRight 0.6s ease-out forwards;
+        transition: all 0.3s;
+      }
+      
+      .task-input:focus-within {
+        transform: scale(1.02);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      }
+      
+      #task-name {
+        flex: 1;
+        padding: 1rem 1.2rem;
+        border: none;
+        background-color: var(--input-bg);
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s;
+      }
+      
+      #task-name:focus {
+        background-color: #fff;
+        box-shadow: inset 0 0 0 2px var(--primary-color);
+      }
+      
+      #task-name-edit {
+        width: 100%;
+        padding: 0.7rem;
+        border: 2px solid var(--primary-color);
+        border-radius: 6px;
+        font-size: 1rem;
+        outline: none;
+        animation: pulse 1s;
+      }
+      
+      button[onclick="addTask()"] {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0 1.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      button[onclick="addTask()"]::before {
+        content: "\f067";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        margin-right: 8px;
+        transition: transform 0.3s;
+      }
+      
+      button[onclick="addTask()"]:hover::before {
+        animation: rotate 0.5s;
+      }
+      
+      button[onclick="addTask()"]:hover {
+        background-color: var(--secondary-color);
+      }
+      
+      button[onclick="addTask()"]::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+      }
+      
+      button[onclick="addTask()"]:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+      }
+      
+      @keyframes ripple {
+        0% {
+          transform: scale(0, 0);
+          opacity: 0.5;
+        }
+        20% {
+          transform: scale(25, 25);
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 0;
+          transform: scale(40, 40);
+        }
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 1rem;
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: 0.2s;
+        opacity: 0;
+      }
+      
+      thead {
+        background-color: var(--primary-color);
+        color: white;
+      }
+      
+      th, td {
+        padding: 1rem;
+        text-align: left;
+      }
+      
+      th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      th:first-child {
+        border-top-left-radius: 8px;
+      }
+      
+      th:last-child {
+        border-top-right-radius: 8px;
+      }
+      
+      th::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateX(-100%);
+        transition: transform 0.5s;
+      }
+      
+      thead:hover th::after {
+        transform: translateX(0);
+      }
+      
+      tr {
+        transition: all 0.3s;
+      }
+      
+      tbody tr {
+        border-bottom: 1px solid var(--border-color);
+        background-color: var(--card-bg);
+        animation: slideInFromRight 0.5s ease-out forwards;
+        animation-delay: calc(0.1s * var(--row-index, 1));
+        opacity: 0;
+      }
+      
+      tbody tr:nth-child(1) { --row-index: 1; }
+      tbody tr:nth-child(2) { --row-index: 2; }
+      tbody tr:nth-child(3) { --row-index: 3; }
+      tbody tr:nth-child(4) { --row-index: 4; }
+      tbody tr:nth-child(5) { --row-index: 5; }
+      
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      
+      tbody tr:hover {
+        background-color: rgba(67, 97, 238, 0.05);
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        z-index: 1;
+        position: relative;
+      }
+      
+      .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: currentColor;
+        border-radius: 50%;
+        opacity: 0.2;
+        transform: scale(0);
+        transition: transform 0.3s;
+      }
+      
+      .action-btn:hover::before {
+        transform: scale(1);
+      }
+      
+      .action-btn i {
+        position: relative;
+        z-index: 2;
+      }
+      
+      .edit-btn {
+        color: var(--primary-color);
+        background-color: rgba(67, 97, 238, 0.1);
+      }
+      
+      .edit-btn:hover {
+        color: white;
+        background-color: var(--primary-color);
+        transform: scale(1.1) rotate(5deg);
+      }
+      
+      .edit-btn:active {
+        animation: bounce 0.3s;
+      }
+      
+      .delete-btn {
+        color: var(--delete-color);
+        background-color: rgba(230, 57, 70, 0.1);
+      }
+      
+      .delete-btn:hover {
+        color: white;
+        background-color: var(--delete-color);
+        transform: scale(1.1) rotate(-5deg);
+      }
+      
+      .delete-btn:active {
+        animation: shake 0.3s;
+      }
+      
+      /* Animation for new task */
+      .new-task {
+        animation: slideInFromRight 0.5s ease-out forwards;
+      }
+      
+      /* Animation for task deletion */
+      .deleting-task {
+        animation: fadeOut 0.5s forwards;
+      }
+      
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(50px); }
+      }
+      
+      @media (max-width: 768px) {
+        .container {
+          padding: 1.5rem;
+        }
+        
+        th, td {
+          padding: 0.8rem 0.5rem;
+        }
+        
+        .app-title {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="app-title">To-Do List</h1>
+      <div class="task-input">
+        <input type="text" id="task-name" placeholder="Nhập nhiệm vụ mới..." />
+        <button onclick="addTask()">Add Task</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Nhiệm vụ</th>
+            <th>Chỉnh sửa</th>
+            <th>Xóa</th>
+          </tr>
+        </thead>
+        <tbody id="task-list">
+          <tr>
+            <td>1</td>
+            <td>Học HTML</td>
+            <td><button class="action-btn edit-btn"><i class="fas fa-edit"></i></button></td>
+            <td><button class="action-btn delete-btn"><i class="fas fa-trash"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      const todos = [{
+        id: 1,
+        name: "Học HTML"
+      }, {
+        id: 2,
+        name: "Học CSS"
+      }, {
+        id: 3,
+        name: "Học JavaScript"
+      }, {
+        id: 4,
+        name: "Học VueJS"
+      }];
+
+      let currentEditId = -1;
+
+      function renderTodoList() {
+        const taskList = document.getElementById("task-list");
+        taskList.innerHTML = "";
+        todos.forEach((todo, index) => { // index là vị trí của phần tử trong mảng
+          if (currentEditId === todo.id) {
+            taskList.innerHTML += ` 
+              <tr>
+                <td>${index + 1}</td>
+                <td><input type="text" id="task-name-edit" value="${todo.name}" /></td>
+                <td><button onclick="saveEditTask(${todo.id})" class="action-btn edit-btn"><i class="fas fa-save"></i></button></td>
+                <td><button onclick="deleteTask(${todo.id})" class="action-btn delete-btn"><i class="fas fa-trash"></i></button></td>
+              </tr>
+            `;
+          } else {
+            taskList.innerHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${todo.name}</td>
+              <td><button onclick="editTask(${todo.id})" class="action-btn edit-btn"><i class="fas fa-edit"></i></button></td>
+              <td><button onclick="deleteTask(${todo.id})" class="action-btn delete-btn"><i class="fas fa-trash"></i></button></td>
+            </tr>
+          `;
+          }
+        });
+        
+        // Apply animation to each row
+        const rows = taskList.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+          row.style.opacity = '0';
+          setTimeout(() => {
+            row.style.animation = `slideInFromRight 0.5s ease-out forwards`;
+            row.style.animationDelay = `${index * 0.1}s`;
+          }, 50);
+        });
+      }
+
+      renderTodoList();
+
+      function addTask() {
+        const taskName = document.getElementById("task-name").value;
+        if (taskName.trim() !== "") {
+          const newId = Math.floor(Math.random() * 1000000);
+          todos.push({ id: newId, name: taskName });
+          renderTodoList();
+          document.getElementById("task-name").value = "";
+          
+          // Add animation to the newly added task
+          setTimeout(() => {
+            const lastRow = document.querySelector('#task-list tr:last-child');
+            if (lastRow) {
+              lastRow.classList.add('new-task');
+            }
+          }, 100);
+        } else {
+          // Shake the input if empty
+          const input = document.getElementById("task-name");
+          input.style.animation = "shake 0.5s";
+          setTimeout(() => {
+            input.style.animation = "";
+          }, 500);
+        }
+      }
+
+      function editTask(id) {
+        currentEditId = id;
+        renderTodoList();
+        // Focus on the edit input after rendering
+        setTimeout(() => {
+          const editInput = document.getElementById("task-name-edit");
+          if (editInput) {
+            editInput.focus();
+            editInput.select();
+          }
+        }, 300);
+      }
+
+      function deleteTask(id) {
+        // Add delete animation
+        const taskToDelete = document.querySelector(`#task-list tr:nth-child(${todos.findIndex(t => t.id === id) + 1})`);
+        if (taskToDelete) {
+          taskToDelete.classList.add('deleting-task');
+          setTimeout(() => {
+            const filteredTodos = todos.filter(todo => todo.id !== id);
+            todos = filteredTodos;
+            renderTodoList();
+          }, 500);
+        } else {
+          const filteredTodos = todos.filter(todo => todo.id !== id);
+          todos = filteredTodos;
+          renderTodoList();
+        }
+      }
+
+      function saveEditTask(id) {
+        const taskName = document.getElementById("task-name-edit").value;
+        if (taskName.trim() !== "") {
+          const todoToUpdate = todos.find(todo => todo.id === id);
+          if (todoToUpdate) {
+            todoToUpdate.name = taskName;
+          }
+          currentEditId = -1;
+          renderTodoList();
+        } else {
+          // Shake the input if empty
+          const input = document.getElementById("task-name-edit");
+          input.style.animation = "shake 0.5s";
+          setTimeout(() => {
+            input.style.animation = "";
+          }, 500);
+        }
+      }
+      
+      // Add keyboard event listeners
+      document.getElementById("task-name").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+          addTask();
+        }
+      });
+      
+      // Add event listener for the edit input field (will be created dynamically)
+      document.addEventListener("keypress", function(event) {
+        if (event.key === "Enter" && currentEditId !== -1) {
+          saveEditTask(currentEditId);
+        }
+      });
+    </script>
+  </body>
+</html>
