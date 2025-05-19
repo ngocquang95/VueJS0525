@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function increment() {
+        let counter = 0;
+
+        function plus() {
+          counter++;
+          return counter;
+        }
+
+        function plus2() {
+          counter += 2;
+          return counter;
+        }
+
+        return { plus: plus, plus2: plus2 };
+      }
+
+      //   increment()();
+      //   increment()();
+
+      const Counter = increment();
+      console.log(Counter);
+
+      console.log(Counter.plus());
+      console.log(Counter.plus2());
+      console.log(Counter.plus2());
+
+    //   const Counter2 = increment();
+    //   console.log(Counter2());
+    //   console.log(Counter2());
+    //   console.log(Counter2());
+
+      //   let counter = 0;
+
+      //   function plus() {
+      //     counter++;
+      //     return counter;
+      //   }
+
+      //   console.log(plus());
+      //   console.log(plus());
+      //   console.log(plus());
+
+      // plus();
+      // plus();
+
+      // increment() // 1
+      // increment() // 1
+      // increment() // 1
+
+      //   function hello() {
+      //     console.log("Hello");
+      //   }
+
+      //   console.log(hello);
+    </script>
+  </body>
+</html>
