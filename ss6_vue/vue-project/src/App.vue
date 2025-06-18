@@ -7,7 +7,9 @@ import Home7 from './components/Home7.vue'
 </script>
 
 <template>
-  <!-- <Home /> -->
+  <Home />
+  <Home />
+  <Home />
   <!-- <Home2 /> -->
   <!-- <Home3 /> -->
   <!-- <Home5 /> -->
