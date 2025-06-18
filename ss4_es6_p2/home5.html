@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      console.log(this);
+      console.log(window);
+
+      function display(score, address) {
+        console.log(this);
+        console.log(score, address);
+      }
+
+      const student = {
+        id: 1,
+        name: "John",
+      }
+
+      display.apply(student, [100, "New York"]);
+
+      // const displayBind = display.bind(student, 100, "New York");
+      // displayBind();
+    </script>
+  </body>
+</html>
