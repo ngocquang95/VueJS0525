@@ -1,0 +1,34 @@
+{
+  "students": [
+    {
+      "id": "1",
+      "name": "John",
+      "age": 20
+    },
+    {
+      "id": "2",
+      "name": "Jane",
+      "age": 21
+    },
+    {
+      "id": "3",
+      "name": "Jim",
+      "age": 22
+    },
+    {
+      "id": "be57",
+      "name": "Nguyễn Văn A",
+      "age": 30
+    },
+    {
+      "id": "0fcc",
+      "name": "Nguyễn Văn B",
+      "age": "10"
+    },
+    {
+      "id": "beb8",
+      "name": "Nguyen Van C",
+      "age": "099"
+    }
+  ]
+}

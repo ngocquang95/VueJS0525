@@ -1,13 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import BaseModal from '../BaseModal.vue';
 import StudentForm from './StudentForm.vue';
+import StudentApi from '@/api-service/StudentApi';
 
-const students = ref([
-    { id: 1, name: 'John', age: 20, class: '1A' },
-    { id: 2, name: 'Jane', age: 21, class: '1B' },
-    { id: 3, name: 'Jim', age: 22, class: '1C' },
-])
+const students = ref([])
 
 const isModalCreationOpen = ref(false);
 
@@ -15,9 +12,26 @@ const handleOpenCreationModal = () => isModalCreationOpen.value = true;
 const handleCloseCreationModal = () => isModalCreationOpen.value = false;
 
 const handleSubmitCreation = (student) => {
-    students.value.push(student)
+    // students.value.push(student)
+    fetchStudents()
     handleCloseCreationModal()
 }
+
+
+
+const fetchStudents = async () => {
+    // Có 3 cách xử lý bất đồng bộ
+    try {
+        const res = await StudentApi.findAll()
+        students.value = res.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+onMounted(() => {
+    fetchStudents()
+})
 
 </script>
 
@@ -62,11 +76,12 @@ const handleSubmitCreation = (student) => {
     border-spacing: 0;
     background: #fff;
     border-radius: 1rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 0.75rem 1.25rem;
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
@@ -93,7 +108,7 @@ const handleSubmitCreation = (student) => {
     cursor: pointer;
     transition: all 0.3s ease;
     margin-right: 0.5rem;
-    box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
 }
 
 .btn-gradient:last-child {
@@ -103,7 +118,7 @@ const handleSubmitCreation = (student) => {
 .btn-gradient:hover {
     opacity: 0.9;
     transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 4px 16px rgba(59,130,246,0.15);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
 }
 
 h1 {

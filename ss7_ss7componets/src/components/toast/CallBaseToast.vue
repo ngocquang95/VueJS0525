@@ -21,7 +21,7 @@ const onToastClose = () => isToastOpen.value = false;
 </script>
 
 <template>
-  <button class="btn-gradient" @click="showToast('Hello World')">Show Toast</button>
+  <!-- <button class="btn-gradient" @click="showToast('Hello World')">Show Toast</button> -->
   <BaseToast v-if="isToastOpen" v-bind="toastConfig" @close="onToastClose" />
 </template>
 

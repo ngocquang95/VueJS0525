@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import StudentApi from '@/api-service/StudentApi';
 
 const student = ref({
     name: '',
@@ -8,8 +9,13 @@ const student = ref({
 
 const emit = defineEmits(['close', 'submit'])
 
-const submit = () => {
-    emit('submit', {...student.value, id: Math.floor(Math.random() * 1000)})
+const submit = async () => {
+    try {
+        const res = await StudentApi.create(student.value)
+        emit('submit', res.data)
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 

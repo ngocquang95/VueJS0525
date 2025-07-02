@@ -1,3 +1,5 @@
 /video
 /ss5_ts/node_modules
 /ss5_ts/.gitignore
+/fake-api/node_modules
+/fake-api/.gitignore
